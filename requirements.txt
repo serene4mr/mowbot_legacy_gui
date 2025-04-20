@@ -1,0 +1,11 @@
+# qt5-qmake
+# PyQt5
+# PyQtWebEngine
+termcolor
+websockets
+pydantic
+pyyaml
+folium
+numpy
+scipy
+docker
