@@ -87,8 +87,6 @@ setup_app_directory() {
         echo "Error: Failed to copy mowbot_legacy_gui.sh"
         return 1
     fi
-
-    # 
     
     # make the script executable
     if ! sudo chmod +x $INSTALL_DIR/mowbot_legacy_gui.sh; then
