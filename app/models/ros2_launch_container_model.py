@@ -4,6 +4,7 @@ import os
 import docker
 import json
 from PyQt5.QtCore import QObject, pyqtSignal, QTimer, QThread, pyqtSlot
+from app.models import ros2_launch_container_cfg
 from app.models.ros2_launch_container_cfg import CONTAINERS_CFG
 from app.utils.logger import logger
 
@@ -32,6 +33,7 @@ class ROS2LaunchContainerModel(QObject):
             raise Exception("This class is a singleton! Use get_instance() instead.")
         super().__init__()
         self._config = config
+        ros2_launch_container_cfg.IMAGE = self._config["container_image"]
         try:
             self.docker_client = docker.from_env()
             self.docker_client.ping()  # Test Docker connection.

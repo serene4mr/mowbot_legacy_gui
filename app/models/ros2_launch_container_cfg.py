@@ -4,7 +4,7 @@ HOST_HOME = os.environ.get("HOST_HOME")
 if HOST_HOME is None:
     raise EnvironmentError("HOST_HOME environment variable is not set.")
 
-IMAGE = "ghcr.io/serene4uto/mowbot-legacy-base"
+IMAGE = "ghcr.io/serene4mr/mowbot_legacy_gui:latest"
 
 CONTAINERS_CFG = {
     
