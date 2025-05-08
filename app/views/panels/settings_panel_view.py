@@ -192,8 +192,8 @@ class SettingsPanelView(QWidget):
         self._init_ui()
         
         # Load default parameters
-        self.sync_params_file_path = \
-            f"{self._config['mowbot_legacy_data_path']}/__params__.yaml"
+        self.sync_nav_params_file_path = \
+            f"{self._config['mowbot_legacy_data_path']}/__nav_params__.yaml"
     
     def _init_buttons(self):
         """Initialize buttons with consistent styling."""
@@ -235,7 +235,7 @@ class SettingsPanelView(QWidget):
         load_file_path, _ = QFileDialog.getOpenFileName(
             self,
             "Select Parameters File",
-            f"{self._config['mowbot_legacy_data_path']}/params",
+            f"{self._config['mowbot_legacy_data_path']}/nav_params",
             "YAML Files (*.yaml);;All Files (*)",
         )
         return load_file_path
@@ -244,7 +244,7 @@ class SettingsPanelView(QWidget):
         """Save parameters to the file."""
         current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         default_filename = f"params_{current_time}.yaml"
-        default_path = f"{self._config['mowbot_legacy_data_path']}/params"
+        default_path = f"{self._config['mowbot_legacy_data_path']}/nav_params"
         save_file_path, _ = QFileDialog.getSaveFileName(
             self,
             "Select Parameters File",

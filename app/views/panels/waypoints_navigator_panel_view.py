@@ -155,7 +155,7 @@ class WaypointsNavigatorPanelView(QWidget):
         load_file_path, _ = QFileDialog.getOpenFileName(
             self,
             "Select Parameters File",
-            self._config['mowbot_legacy_data_path'] + '/params',
+            self._config['mowbot_legacy_data_path'] + '/nav_params',
             "YAML Files (*.yaml);;All Files (*)",
         )
         

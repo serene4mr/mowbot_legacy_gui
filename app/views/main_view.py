@@ -420,7 +420,7 @@ class MainView(QWidget):
     def on_settings_sync_btn_clicked(self):
         """Forward the settings sync button event."""
         self.signal_settings_load_btn_clicked.emit(
-            self.multi_panel.settings_panel.sync_params_file_path
+            self.multi_panel.settings_panel.sync_nav_params_file_path
         )
         
     @pyqtSlot(str)
