@@ -76,12 +76,44 @@ load_env() {
 
 
 #install some necessary apt packages
-install_apt_packages() {
+install_packages() {
+
+    # Ensure ~/.local/bin is in PATH for user-installed Python scripts
+    export PATH="$HOME/.local/bin:$PATH"
+    if ! grep -q 'export PATH="$HOME/.local/bin:$PATH"' ~/.bashrc; then
+        echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+    fi
+
     sudo apt-get update
     sudo apt-get install -y \
-        curl \
         git \
-        docker-buildx
+        python3 \
+        python3-pip \
+        ca-certificates \
+        curl \
+        gnupg
+
+    # Add Docker's official GPG key and repository if not already present
+    if [ ! -f /etc/apt/keyrings/docker.gpg ]; then
+        sudo install -m 0755 -d /etc/apt/keyrings
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+        sudo chmod a+r /etc/apt/keyrings/docker.gpg
+    fi
+
+    if [ ! -f /etc/apt/sources.list.d/docker.list ]; then
+        echo \
+          "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+          $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+          sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    fi
+
+    sudo apt-get update
+    sudo apt-get install -y \
+        docker-buildx \
+        docker-buildx-plugin
+
+    # Install vcstool for the current user
+    python3 -m pip install --user --upgrade vcstool
 }
 
 
@@ -121,6 +153,6 @@ parse_arguments "$@"
 set_platform
 set_arch_lib_dir
 load_env
-install_apt_packages
+install_packages
 build_images
 remove_dangling_images
