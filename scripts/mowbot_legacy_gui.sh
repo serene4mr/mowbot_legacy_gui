@@ -1,5 +1,7 @@
 #!/bin/bash
 
+IMAGE_NAME="ghcr.io/serene4mr/mowbot_legacy_gui:latest"
+
 xhost +local:docker
 export DISPLAY=:0
 
@@ -13,7 +15,7 @@ docker run -i --rm \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -e DISPLAY=$DISPLAY \
   -e HOST_HOME=$HOME \
-  ghcr.io/serene4uto/mowbot-legacy-gui:latest /bin/bash -c " \
+  $IMAGE_NAME /bin/bash -c " \
         export QT_XCB_GL_INTEGRATION=none && \
         cd /mowbot_legacy_gui && \
         /bin/python3 -m app.main \

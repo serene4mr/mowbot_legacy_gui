@@ -135,7 +135,7 @@ build_images() {
         --build-arg BASE_IMAGE="$base_image" \
         --build-arg LIB_DIR="$lib_dir" \
         -f "$SCRIPT_DIR/Dockerfile" \
-        -t "ghcr.io/serene4mr/mowbot-legacy-gui:latest" \
+        -t "ghcr.io/serene4mr/mowbot_legacy_gui:latest" \
         "$WORKSPACE_ROOT"
     set +x
 }
