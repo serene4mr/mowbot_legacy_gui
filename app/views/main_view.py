@@ -24,9 +24,9 @@ from .multi_panel_view import MultiPanelView
 from app.utils.logger import logger
 class MainView(QWidget):
     
-    signal_settings_btn_clicked = pyqtSignal()
-    signal_logger_btn_clicked = pyqtSignal()
-    signal_navigator_btn_clicked = pyqtSignal()
+    # signal_settings_btn_clicked = pyqtSignal()
+    # signal_logger_btn_clicked = pyqtSignal()
+    # signal_navigator_btn_clicked = pyqtSignal()
     
     signal_bringup_btn_clicked = pyqtSignal(str) # start or stop
     signal_localization_btn_clicked = pyqtSignal(str) # start or stop
@@ -46,6 +46,10 @@ class MainView(QWidget):
     
     signal_settings_load_btn_clicked = pyqtSignal(str)  # str: file path
     signal_settings_save_btn_clicked = pyqtSignal(str, dict)  # str: file path, dict: yaml data
+    
+    signal_ntrip_params_save_btn_clicked = pyqtSignal(dict)  # dict: ntrip params
+    signal_ntrip_params_sync_btn_clicked = pyqtSignal()
+    
     
     def __init__(self, config):
         super().__init__()
@@ -211,6 +215,9 @@ class MainView(QWidget):
         self.menu_box.settings_btn.clicked.connect(self.on_settings_btn_clicked)
         self.menu_box.logger_btn.clicked.connect(self.on_logger_btn_clicked)
         self.menu_box.navigator_btn.clicked.connect(self.on_navigator_btn_clicked)
+        self.menu_box.ntrip_settings_btn.clicked.connect(
+            self.on_ntrip_settings_btn_clicked)
+        
         self.bringup_btn.clicked.connect(self.on_bringup_btn_clicked)
         self.localize_btn.clicked.connect(self.on_localize_btn_clicked)
         self.multi_panel.waypoints_navigator_panel.option_bar.start_nav_wpfl_btn.clicked.connect(
@@ -240,6 +247,12 @@ class MainView(QWidget):
         self.multi_panel.settings_panel.params_sync_btn.clicked.connect(
             self.on_settings_sync_btn_clicked)
         
+        # ntrip settings
+        self.multi_panel.ntrip_settings_panel.sync_btn.clicked.connect(
+            self.on_signal_ntrip_params_sync_btn_clicked)
+        self.multi_panel.ntrip_settings_panel.save_btn.clicked.connect(
+            self.on_signal_ntrip_params_save_btn_clicked)
+        
     def on_exit_btn_clicked(self):
         """Forward the exit button event."""
         # self.signal_exit_btn_clicked.emit()
@@ -257,21 +270,27 @@ class MainView(QWidget):
         
     def on_settings_btn_clicked(self):
         """Forward the settings button event from the menu and update the UI."""
-        self.menu_box.highlight_button("settings")
+        self.menu_box.highlight_button("nav_settings")
         self.multi_panel.show_settings_panel()  # Assuming the method name reflects your panel's API.
-        self.signal_settings_btn_clicked.emit()
+        # self.signal_settings_btn_clicked.emit()
         
     def on_logger_btn_clicked(self):
         """Forward the logger button event."""
         self.menu_box.highlight_button("logger")
         self.multi_panel.show_waypoints_logger_panel()
-        self.signal_logger_btn_clicked.emit()
+        # self.signal_logger_btn_clicked.emit()
         
     def on_navigator_btn_clicked(self):
         """Forward the navigator button event."""
         self.menu_box.highlight_button("navigator")
         self.multi_panel.show_waypoints_navigator_panel()
-        self.signal_navigator_btn_clicked.emit()
+        # self.signal_navigator_btn_clicked.emit()
+    
+    def on_ntrip_settings_btn_clicked(self):
+        """Forward the NTRIP settings button event."""
+        self.menu_box.highlight_button("ntrip_settings")
+        self.multi_panel.show_ntrip_settings_panel()
+        # self.signal_ntrip_settings_btn_clicked.emit()
         
     def on_bringup_btn_clicked(self):
         """Handle the bringup button click event."""
@@ -422,6 +441,19 @@ class MainView(QWidget):
         self.signal_settings_load_btn_clicked.emit(
             self.multi_panel.settings_panel.sync_nav_params_file_path
         )
+        
+    def on_signal_ntrip_params_save_btn_clicked(self):
+        """Forward the NTRIP params save button event."""
+        ntrip_params = self.multi_panel.ntrip_settings_panel.get_ntrip_params()
+        if not ntrip_params:
+            logger.warning("No NTRIP params to save.")
+            return
+        logger.info(f"NTRIP params: {ntrip_params}")
+        self.signal_ntrip_params_save_btn_clicked.emit(ntrip_params)
+    
+    def on_signal_ntrip_params_sync_btn_clicked(self):
+        """Forward the NTRIP params sync button event."""
+        self.signal_ntrip_params_sync_btn_clicked.emit()
         
     @pyqtSlot(str)
     def on_signal_bringup_container_status(self, status: str):
@@ -594,3 +626,9 @@ class MainView(QWidget):
             yaml_data=params,
         )
         
+    @pyqtSlot(dict)
+    def on_signal_ntrip_params_synced(self, params: dict):
+        logger.info(f"NTRIP params synced: {params}")
+        self.multi_panel.ntrip_settings_panel.set_ntrip_params(
+            params=params,
+        )

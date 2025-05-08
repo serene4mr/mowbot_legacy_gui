@@ -7,6 +7,7 @@ from PyQt5.QtCore import (
 )
 from .foxglove_ws_model import FoxgloveWsModel
 from .ros2_launch_container_model import ROS2LaunchContainerModel
+from .ntrip_params_cfg_model import NTRIPParamsCfgModel
 
 from app.utils.logger import logger
 
@@ -34,6 +35,9 @@ class MainModel(QObject):
         )
         # self._ros2_launch_container_model.create_all_launch_containers()
         
+        self.ntrip_params_cfg_model = NTRIPParamsCfgModel.get_instance(
+            config=self._config,
+        )
         
     @property
     def foxglove_ws_model(self):
@@ -56,7 +60,7 @@ class MainModel(QObject):
         with open(file_path, 'w') as file:
             yaml.dump(waypoints, file)
             
-    def _load_yaml_file(self, source_path: str, target_path: str) -> dict:
+    def _hard_load_yaml_file(self, source_path: str, target_path: str) -> dict:
         """
         Common function to load YAML data from source_path and save to target_path.
         """
@@ -84,12 +88,12 @@ class MainModel(QObject):
             logger.error(f"Error loading YAML file {source_path}: {e}")
             return None
 
-    def load_yaml_waypoints_file(self, file_path: str):
+    def hard_load_yaml_waypoints_file(self, file_path: str):
         """
         Loads waypoints from a YAML file.
         """
         target_wp_file_path = self._config['mowbot_legacy_data_path'] + self._config["waypoints_file"]
-        waypoints = self._load_yaml_file(file_path, target_wp_file_path)
+        waypoints = self._hard_load_yaml_file(file_path, target_wp_file_path)
         file_name = os.path.basename(file_path)
         # Check if the file name is valid
         if waypoints:
@@ -97,19 +101,19 @@ class MainModel(QObject):
                 file_name, waypoints
             )
 
-    def load_yaml_params_file(self, file_path: str):
+    def hard_load_yaml_nav_params_file(self, file_path: str):
         """
         Loads parameters from a YAML file.
         """
         target_params_file_path = self._config['mowbot_legacy_data_path'] + self._config["nav_params_file"]
-        params = self._load_yaml_file(file_path, target_params_file_path)
+        params = self._hard_load_yaml_file(file_path, target_params_file_path)
         file_name = os.path.basename(file_path)
         if params:
             self.signal_on_params_loaded.emit(
                 file_name, params
             )        
             
-    def load_yaml_param_settings_file(self, file_path: str):
+    def soft_load_yaml_nav_param_settings_file(self, file_path: str):
         
         with open(file_path, 'r') as file:
             yaml_data = yaml.safe_load(file)

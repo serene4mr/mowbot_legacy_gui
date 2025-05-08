@@ -79,6 +79,12 @@ class MainController(QObject):
         self._main_view.signal_settings_save_btn_clicked.connect(
             self.on_signal_settings_save_btn_clicked,
         )
+        self._main_view.signal_ntrip_params_sync_btn_clicked.connect(
+            self.on_signal_ntrip_params_sync_btn_clicked,
+        )
+        self._main_view.signal_ntrip_params_save_btn_clicked.connect(
+            self.on_signal_ntrip_params_save_btn_clicked,
+        )
         
         # Container status update signals
         self._main_model.ros2_launch_container_model.signal_container_status_updated.connect(
@@ -105,6 +111,9 @@ class MainController(QObject):
         )
         self._main_model.signal_on_settings_param_loaded.connect(
             self._main_view.on_signal_settings_param_loaded,
+        )
+        self._main_model.ntrip_params_cfg_model.signal_ntrip_params_synced.connect(
+            self._main_view.on_signal_ntrip_params_synced,
         )
         
     @pyqtSlot()
@@ -229,7 +238,7 @@ class MainController(QObject):
         Slot method to handle the load waypoints button click event.
         """
         logger.info(f"Load waypoints button clicked with path: {file_path}")
-        self._main_model.load_yaml_waypoints_file(
+        self._main_model.hard_load_yaml_waypoints_file(
             file_path=file_path,
         )
         
@@ -239,7 +248,7 @@ class MainController(QObject):
         Slot method to handle the load params button click event.
         """
         logger.info(f"Load params button clicked with path: {file_path}")
-        self._main_model.load_yaml_params_file(
+        self._main_model.hard_load_yaml_nav_params_file(
             file_path=file_path,
         )
         
@@ -249,7 +258,7 @@ class MainController(QObject):
         Slot method to handle the load settings button click event.
         """
         logger.info(f"Load settings button clicked with path: {file_path}")
-        yaml_data = self._main_model.load_yaml_param_settings_file(
+        yaml_data = self._main_model.soft_load_yaml_nav_param_settings_file(
             file_path=file_path,
         )
         
@@ -271,6 +280,25 @@ class MainController(QObject):
             file_path=file_path,
             yaml_data=yaml_data,
         )
+        
+    @pyqtSlot()
+    def on_signal_ntrip_params_sync_btn_clicked(self):
+        """
+        Slot method to handle the NTRIP parameters sync button click event.
+        """
+        logger.info("NTRIP parameters sync button clicked.")
+        self._main_model.ntrip_params_cfg_model.sync()
+    
+    @pyqtSlot(dict)
+    def on_signal_ntrip_params_save_btn_clicked(self, params: dict):
+        """
+        Slot method to handle the NTRIP parameters save button click event.
+        """
+        logger.info(f"NTRIP parameters save button clicked with params: {params}")
+        self._main_model.ntrip_params_cfg_model.set_params(
+            params=params,
+        )
+        self._main_model.ntrip_params_cfg_model.apply()
         
         
                 

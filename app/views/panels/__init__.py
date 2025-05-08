@@ -1,3 +1,4 @@
 from .settings_panel_view import SettingsPanelView
+from .ntrip_settings_panel_view import NTRIPSettingsPanelView
 from .waypoints_logger_panel_view import WaypointsLoggerPanelView
 from .waypoints_navigator_panel_view import WaypointsNavigatorPanelView

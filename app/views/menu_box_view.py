@@ -12,9 +12,12 @@ class MenuBoxView(QWidget):
     def __init__(self):
         super().__init__()
         
-        # Create buttons with new names
-        self.settings_btn = QPushButton('Settings')
+        self.settings_btn = QPushButton('Nav Settings')
         self.settings_btn.setFixedHeight(50)
+
+        self.ntrip_settings_btn = QPushButton('NTRIP Settings')
+        self.ntrip_settings_btn.setFixedHeight(50)
+        
         
         self.logger_btn = QPushButton('Waypoint Logger')
         self.logger_btn.setFixedHeight(50)
@@ -37,6 +40,8 @@ class MenuBoxView(QWidget):
         menu_grb.setStyleSheet("QGroupBox { font-size: 16px; font-weight: bold; }")
         menu_layout = QVBoxLayout()
         menu_layout.addWidget(self.settings_btn)
+        menu_layout.addSpacing(10)
+        menu_layout.addWidget(self.ntrip_settings_btn)
         
         # Create a nested group box for task-related buttons
         self.task_menu_grb.setStyleSheet("QGroupBox { font-size: 14px; font-weight: bold; }")
@@ -60,9 +65,11 @@ class MenuBoxView(QWidget):
         self.settings_btn.setEnabled(True)
         self.logger_btn.setEnabled(True)
         self.navigator_btn.setEnabled(True)
+        self.ntrip_settings_btn.setEnabled(True)
         self.settings_btn.setStyleSheet("")
         self.logger_btn.setStyleSheet("")
         self.navigator_btn.setStyleSheet("")
+        self.ntrip_settings_btn.setStyleSheet("")
     
     def highlight_button(self, button_name: str):
         """
@@ -72,10 +79,12 @@ class MenuBoxView(QWidget):
         """
         self.reset_btns()
         style = "background-color: lightblue; font-size: 16px; font-weight: bold;"
-        if button_name == "settings":
+        if button_name == "nav_settings":
             self.settings_btn.setStyleSheet(style)
         elif button_name == "logger":
             self.logger_btn.setStyleSheet(style)
         elif button_name == "navigator":
             self.navigator_btn.setStyleSheet(style)
+        elif button_name == "ntrip_settings":
+            self.ntrip_settings_btn.setStyleSheet(style)
         

@@ -8,7 +8,8 @@ from PyQt5.QtWidgets import (
 from .panels import (
     SettingsPanelView,
     WaypointsLoggerPanelView,
-    WaypointsNavigatorPanelView
+    WaypointsNavigatorPanelView,
+    NTRIPSettingsPanelView,
 )
 
 class MultiPanelView(QWidget):
@@ -26,12 +27,16 @@ class MultiPanelView(QWidget):
         )  
         self.settings_panel = SettingsPanelView(
             config=self._config
-        )                                
+        )     
+        self.ntrip_settings_panel = NTRIPSettingsPanelView(
+            config=self._config
+        )                    
 
         # Add panels to the stacked widget.
         self.stacked_widget.addWidget(self.waypoints_logger_panel)
         self.stacked_widget.addWidget(self.waypoints_navigator_panel)
         self.stacked_widget.addWidget(self.settings_panel)
+        self.stacked_widget.addWidget(self.ntrip_settings_panel)
 
         self._init_ui()
 
@@ -56,4 +61,8 @@ class MultiPanelView(QWidget):
     def show_settings_panel(self):
         """Switches to the Settings panel (Index 2)."""
         self.stacked_widget.setCurrentIndex(2)
+        
+    def show_ntrip_settings_panel(self):
+        """Switches to the NTRIP Settings panel (Index 3)."""
+        self.stacked_widget.setCurrentIndex(3)
 
