@@ -109,7 +109,6 @@ install_packages() {
 
     sudo apt-get update
     sudo apt-get install -y \
-        docker-buildx \
         docker-buildx-plugin
 
     # Install vcstool for the current user
