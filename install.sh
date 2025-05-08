@@ -70,6 +70,8 @@ build_docker_image() {
 
         # build the docker image
         bash "$CURRENT_DIR/docker/build.sh"
+    else
+        docker pull ghcr.io/serene4mr/mowbot_legacy_gui:latest
     fi
 }
 
