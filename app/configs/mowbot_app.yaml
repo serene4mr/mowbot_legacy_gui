@@ -9,7 +9,7 @@ foxglove_ws_subprotocol: foxglove.websocket.v1
 bing_api_key: "AkCDUXwYzM3w36XYcNeT0kNOFhpTiQuwluXkQlFBs1WhFbknP2_2iDBXeL_WzXCc"
 
 # container
-container_image: "ghcr.io/serene4mr/mowbot_legacy_base:latest"
+container_image: "ghcr.io/serene4mr/mowbot_legacy:latest"
 container_stop_timeout: 1
 
 
