@@ -92,7 +92,7 @@ class MainModel(QObject):
         """
         Loads waypoints from a YAML file.
         """
-        target_wp_file_path = self._config['mowbot_legacy_data_path'] + self._config["waypoints_file"]
+        target_wp_file_path = self._config['mowbot_legacy_data_path'] + "/" + self._config["waypoints_file"]
         waypoints = self._hard_load_yaml_file(file_path, target_wp_file_path)
         file_name = os.path.basename(file_path)
         # Check if the file name is valid
