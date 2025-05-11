@@ -105,7 +105,7 @@ class MainModel(QObject):
         """
         Loads parameters from a YAML file.
         """
-        target_params_file_path = self._config['mowbot_legacy_data_path'] + self._config["nav_params_file"]
+        target_params_file_path = self._config['mowbot_legacy_data_path'] + "/" + self._config["nav_params_file"]
         params = self._hard_load_yaml_file(file_path, target_params_file_path)
         file_name = os.path.basename(file_path)
         if params:
