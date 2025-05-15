@@ -170,10 +170,10 @@ class MainView(QWidget):
             "font-size: 16px; font-weight: bold; color: gray")
         
         # alias for signal connections
-        self.signal_settings_load_btn_clicked = \
-            self.multi_panel.settings_panel.signal_load_btn_clicked
-        self.signal_settings_save_btn_clicked = \
-            self.multi_panel.settings_panel.signal_save_btn_clicked
+        # self.signal_settings_load_btn_clicked = \
+        #     self.multi_panel.settings_panel.signal_load_btn_clicked
+        # self.signal_settings_save_btn_clicked = \
+        #     self.multi_panel.settings_panel.signal_save_btn_clicked
         
         self._init_ui()
         self._connect_button_events()
@@ -215,8 +215,6 @@ class MainView(QWidget):
         self.menu_box.settings_btn.clicked.connect(self.on_settings_btn_clicked)
         self.menu_box.logger_btn.clicked.connect(self.on_logger_btn_clicked)
         self.menu_box.navigator_btn.clicked.connect(self.on_navigator_btn_clicked)
-        self.menu_box.ntrip_settings_btn.clicked.connect(
-            self.on_ntrip_settings_btn_clicked)
         
         self.bringup_btn.clicked.connect(self.on_bringup_btn_clicked)
         self.localize_btn.clicked.connect(self.on_localize_btn_clicked)
@@ -240,18 +238,13 @@ class MainView(QWidget):
         self.shutdown_btn.clicked.connect(self.on_shutdown_btn_clicked)
         self.restart_btn.clicked.connect(self.on_restart_btn_clicked)
         
-        self.multi_panel.settings_panel.params_load_btn.clicked.connect(
-            self.on_settings_load_btn_clicked)
-        self.multi_panel.settings_panel.params_save_btn.clicked.connect(
-            self.on_settings_save_btn_clicked)
-        self.multi_panel.settings_panel.params_sync_btn.clicked.connect(
-            self.on_settings_sync_btn_clicked)
+        # self.multi_panel.settings_panel.params_load_btn.clicked.connect(
+        #     self.on_settings_load_btn_clicked)
+        # self.multi_panel.settings_panel.params_save_btn.clicked.connect(
+        #     self.on_settings_save_btn_clicked)
+        # self.multi_panel.settings_panel.params_sync_btn.clicked.connect(
+        #     self.on_settings_sync_btn_clicked)
         
-        # ntrip settings
-        self.multi_panel.ntrip_settings_panel.sync_btn.clicked.connect(
-            self.on_signal_ntrip_params_sync_btn_clicked)
-        self.multi_panel.ntrip_settings_panel.save_btn.clicked.connect(
-            self.on_signal_ntrip_params_save_btn_clicked)
         
     def on_exit_btn_clicked(self):
         """Forward the exit button event."""
@@ -270,7 +263,7 @@ class MainView(QWidget):
         
     def on_settings_btn_clicked(self):
         """Forward the settings button event from the menu and update the UI."""
-        self.menu_box.highlight_button("nav_settings")
+        self.menu_box.highlight_button("settings")
         self.multi_panel.show_settings_panel()  # Assuming the method name reflects your panel's API.
         # self.signal_settings_btn_clicked.emit()
         
@@ -285,12 +278,6 @@ class MainView(QWidget):
         self.menu_box.highlight_button("navigator")
         self.multi_panel.show_waypoints_navigator_panel()
         # self.signal_navigator_btn_clicked.emit()
-    
-    def on_ntrip_settings_btn_clicked(self):
-        """Forward the NTRIP settings button event."""
-        self.menu_box.highlight_button("ntrip_settings")
-        self.multi_panel.show_ntrip_settings_panel()
-        # self.signal_ntrip_settings_btn_clicked.emit()
         
     def on_bringup_btn_clicked(self):
         """Handle the bringup button click event."""
