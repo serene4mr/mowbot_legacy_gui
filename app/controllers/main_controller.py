@@ -73,11 +73,11 @@ class MainController(QObject):
         self._main_view.signal_restart_btn_clicked.connect(
             self.on_signal_restart_btn_clicked,
         )
-        self._main_view.signal_settings_load_btn_clicked.connect(
-            self.on_signal_settings_load_btn_clicked,
+        self._main_view.signal_settings_nav_load_btn_clicked.connect(
+            self.on_signal_settings_nav_load_btn_clicked,
         )
-        self._main_view.signal_settings_save_btn_clicked.connect(
-            self.on_signal_settings_save_btn_clicked,
+        self._main_view.signal_settings_nav_save_btn_clicked.connect(
+            self.on_signal_settings_nav_save_btn_clicked,
         )
         self._main_view.signal_settings_ntrip_sync_btn_clicked.connect(
             self.on_signal_settings_ntrip_sync_btn_clicked,
@@ -110,7 +110,7 @@ class MainController(QObject):
             self._main_view.on_signal_params_loaded,
         )
         self._main_model.signal_on_settings_param_loaded.connect(
-            self._main_view.on_signal_settings_param_loaded,
+            self._main_view.on_signal_settings_nav_loaded,
         )
         self._main_model.ntrip_params_cfg_model.signal_settings_ntrip_synced.connect(
             self._main_view.on_signal_settings_ntrip_synced,
@@ -253,7 +253,7 @@ class MainController(QObject):
         )
         
     @pyqtSlot(str)
-    def on_signal_settings_load_btn_clicked(self, file_path: str):
+    def on_signal_settings_nav_load_btn_clicked(self, file_path: str):
         """
         Slot method to handle the load settings button click event.
         """
@@ -271,7 +271,7 @@ class MainController(QObject):
         )
         
     @pyqtSlot(str, dict)
-    def on_signal_settings_save_btn_clicked(self, file_path: str, yaml_data: dict):
+    def on_signal_settings_nav_save_btn_clicked(self, file_path: str, yaml_data: dict):
         """
         Slot method to handle the save settings button click event.
         """

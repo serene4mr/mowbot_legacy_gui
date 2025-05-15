@@ -128,8 +128,11 @@ class NavSettingsTabWidget(QWidget):
 
 class NavSettingsPanelView(QWidget):
 
+    signal_sync_btn_clicked = pyqtSignal(str)  # str: file path
     signal_load_btn_clicked = pyqtSignal(str)  # str: file path
     signal_save_btn_clicked = pyqtSignal(str, dict)  # str: file path, dict: params
+    signal_apply_btn_clicked = pyqtSignal(dict)  # dict: params
+    
     
     def __init__(self, config: Dict[str, Any]):
         super().__init__()
@@ -192,7 +195,7 @@ class NavSettingsPanelView(QWidget):
         self._init_ui()
         
         # Load default parameters
-        self.sync_nav_params_file_path = \
+        self.nav_params_file_path = \
             f"{self._config['mowbot_legacy_data_path']}/__nav_params__.yaml"
     
     def _init_buttons(self):
@@ -205,10 +208,16 @@ class NavSettingsPanelView(QWidget):
         self.params_sync_btn = QPushButton("Sync")
         self.params_load_btn = QPushButton("Load")
         self.params_save_btn = QPushButton("Save")
+        self.params_apply_btn = QPushButton("Apply")
         
         
         # Apply consistent styling to buttons
-        for btn in [self.params_sync_btn, self.params_load_btn, self.params_save_btn]:
+        for btn in [
+            self.params_sync_btn, 
+            self.params_load_btn, 
+            self.params_save_btn, 
+            self.params_apply_btn
+        ]:
             btn.setFixedSize(UI_CONSTANTS["BUTTON_WIDTH"], UI_CONSTANTS["BUTTON_HEIGHT"])
             btn.setFont(btn_font)
         
@@ -224,6 +233,8 @@ class NavSettingsPanelView(QWidget):
         btn_layout.addWidget(self.params_load_btn)
         btn_layout.addSpacing(10)
         btn_layout.addWidget(self.params_save_btn)
+        btn_layout.addSpacing(10)
+        btn_layout.addWidget(self.params_apply_btn)
         btn_layout.addStretch(1)
         
         layout.addStretch(1)

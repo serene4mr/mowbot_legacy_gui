@@ -44,8 +44,10 @@ class MainView(QWidget):
     signal_shutdown_btn_clicked = pyqtSignal()
     signal_restart_btn_clicked = pyqtSignal()
     
-    signal_settings_load_btn_clicked = pyqtSignal(str)  # str: file path
-    signal_settings_save_btn_clicked = pyqtSignal(str, dict)  # str: file path, dict: yaml data
+    signal_settings_nav_load_btn_clicked = pyqtSignal(str)  # str: file path
+    signal_settings_nav_save_btn_clicked = pyqtSignal(str, dict)  # str: file path, dict: yaml data
+    # signal_settings_nav_sync_btn_clicked = pyqtSignal()  # sync button clicked
+    # signal_settings_nav_apply_btn_clicked = pyqtSignal() # apply button clicked
     
     signal_settings_ntrip_save_btn_clicked = pyqtSignal(dict)  # dict: ntrip params
     signal_settings_ntrip_sync_btn_clicked = pyqtSignal()
@@ -170,10 +172,14 @@ class MainView(QWidget):
             "font-size: 16px; font-weight: bold; color: gray")
         
         # alias for signal connections
-        # self.signal_settings_load_btn_clicked = \
-        #     self.multi_panel.settings_panel.signal_load_btn_clicked
-        # self.signal_settings_save_btn_clicked = \
-        #     self.multi_panel.settings_panel.signal_save_btn_clicked
+        self.signal_settings_nav_load_btn_clicked = \
+            self.multi_panel.settings_panel.nav_settings_dlg.nav_panel.signal_load_btn_clicked
+        self.signal_settings_nav_save_btn_clicked = \
+            self.multi_panel.settings_panel.nav_settings_dlg.nav_panel.signal_save_btn_clicked
+        # self.signal_settings_nav_sync_btn_clicked = \
+        #     self.multi_panel.settings_panel.nav_settings_dlg.nav_panel.signal_sync_btn_clicked
+        # self.signal_settings_nav_apply_btn_clicked = \
+        #     self.multi_panel.settings_panel.nav_settings_dlg.nav_panel.signal_apply_btn_clicked
         
         self._init_ui()
         self._connect_button_events()
@@ -238,12 +244,15 @@ class MainView(QWidget):
         self.shutdown_btn.clicked.connect(self.on_shutdown_btn_clicked)
         self.restart_btn.clicked.connect(self.on_restart_btn_clicked)
         
-        # self.multi_panel.settings_panel.params_load_btn.clicked.connect(
-        #     self.on_settings_load_btn_clicked)
-        # self.multi_panel.settings_panel.params_save_btn.clicked.connect(
-        #     self.on_settings_save_btn_clicked)
-        # self.multi_panel.settings_panel.params_sync_btn.clicked.connect(
-        #     self.on_settings_sync_btn_clicked)
+        # navigation settings
+        self.multi_panel.settings_panel.nav_settings_dlg.nav_panel.params_load_btn.clicked.connect(
+            self.on_signal_settings_nav_load_btn_clicked)
+        self.multi_panel.settings_panel.nav_settings_dlg.nav_panel.params_save_btn.clicked.connect(
+            self.on_signal_settings_nav_save_btn_clicked)
+        self.multi_panel.settings_panel.nav_settings_dlg.nav_panel.params_sync_btn.clicked.connect(
+            self.on_signal_settings_nav_sync_btn_clicked)
+        self.multi_panel.settings_panel.nav_settings_dlg.nav_panel.params_apply_btn.clicked.connect(
+            self.on_signal_settings_nav_apply_btn_clicked)
         
         # ntrip settings
         self.multi_panel.settings_panel.ntrip_settings_dlg.ntrip_panel.sync_btn.clicked.connect(
@@ -408,31 +417,45 @@ class MainView(QWidget):
         self.signal_nav_wpfl_params_load_btn_clicked.emit(load_file_path)
         
         
-    def on_settings_load_btn_clicked(self):
+    def on_signal_settings_nav_load_btn_clicked(self):
         """Forward the settings load button event."""
-        load_file_path = self.multi_panel.settings_panel.prompt_file_dialog_for_load()
+        nav_settings = self.multi_panel.settings_panel.nav_settings_dlg.nav_panel
+        load_file_path = nav_settings.prompt_file_dialog_for_load()
         if not load_file_path:
             return
-        self.signal_settings_load_btn_clicked.emit(load_file_path)
+        self.signal_settings_nav_load_btn_clicked.emit(load_file_path)
         
-    def on_settings_save_btn_clicked(self):
+    def on_signal_settings_nav_save_btn_clicked(self):
         """Forward the settings save button event."""
-        save_file_path = self.multi_panel.settings_panel.prompt_file_dialog_for_save()
-        yaml_data = self.multi_panel.settings_panel.get_params()
+        nav_settings = self.multi_panel.settings_panel.nav_settings_dlg.nav_panel
+        save_file_path = nav_settings.prompt_file_dialog_for_save()
+        yaml_data = nav_settings.get_nav_params()
         if not save_file_path:
             return
         if not yaml_data:
             logger.warning("No data to save.")
             return
-        self.signal_settings_save_btn_clicked.emit(
+        self.signal_settings_nav_save_btn_clicked.emit(
             save_file_path, 
             yaml_data
         )
         
-    def on_settings_sync_btn_clicked(self):
+    def on_signal_settings_nav_sync_btn_clicked(self):
         """Forward the settings sync button event."""
-        self.signal_settings_load_btn_clicked.emit(
-            self.multi_panel.settings_panel.sync_nav_params_file_path
+        self.signal_settings_nav_load_btn_clicked.emit(
+            self.multi_panel.settings_panel.nav_settings_dlg.nav_panel.nav_params_file_path
+        )
+        
+    def on_signal_settings_nav_apply_btn_clicked(self):
+        """Forward the settings apply button event."""
+        nav_settings = self.multi_panel.settings_panel.nav_settings_dlg.nav_panel
+        yaml_data = nav_settings.get_nav_params()
+        if not yaml_data:
+            logger.warning("No data to apply.")
+            return
+        self.signal_settings_nav_save_btn_clicked.emit(
+            nav_settings.nav_params_file_path,
+            yaml_data
         )
         
     def on_signal_settings_ntrip_save_btn_clicked(self):
@@ -611,15 +634,17 @@ class MainView(QWidget):
         
         
     @pyqtSlot(str, dict)
-    def on_signal_settings_param_loaded(self, file_path: str, params: dict):
+    def on_signal_settings_nav_loaded(self, file_path: str, params: dict):
         """
         Slot method to handle the settings parameters loaded signal.
         """
         # Update the parameter info display with the loaded parameters
-        self.multi_panel.settings_panel.update_load_params(
+        nav_settings = self.multi_panel.settings_panel.nav_settings_dlg.nav_panel
+        nav_settings.update_load_params(
             yaml_data=params,
         )
-        
+
+    
     @pyqtSlot(dict)
     def on_signal_settings_ntrip_synced(self, params: dict):
         logger.info(f"NTRIP params synced: {params}")
