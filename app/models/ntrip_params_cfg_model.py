@@ -8,7 +8,7 @@ from app.utils.logger import logger
 
 class NTRIPParamsCfgModel(QObject):
     
-    signal_ntrip_params_synced = pyqtSignal(dict)
+    signal_settings_ntrip_synced = pyqtSignal(dict)
     
     _instance = None
 
@@ -50,7 +50,7 @@ class NTRIPParamsCfgModel(QObject):
         with open(self._ntrip_params_file, 'r') as file:
             self._ntrip_params = yaml.safe_load(file)["/**"]["ntrip_client"]["ros__parameters"]
         
-        self.signal_ntrip_params_synced.emit(self._ntrip_params)
+        self.signal_settings_ntrip_synced.emit(self._ntrip_params)
             
         logger.info(f"NTRIP params loaded: {self._ntrip_params}")
             

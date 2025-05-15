@@ -79,11 +79,11 @@ class MainController(QObject):
         self._main_view.signal_settings_save_btn_clicked.connect(
             self.on_signal_settings_save_btn_clicked,
         )
-        self._main_view.signal_ntrip_params_sync_btn_clicked.connect(
-            self.on_signal_ntrip_params_sync_btn_clicked,
+        self._main_view.signal_settings_ntrip_sync_btn_clicked.connect(
+            self.on_signal_settings_ntrip_sync_btn_clicked,
         )
-        self._main_view.signal_ntrip_params_save_btn_clicked.connect(
-            self.on_signal_ntrip_params_save_btn_clicked,
+        self._main_view.signal_settings_ntrip_save_btn_clicked.connect(
+            self.on_signal_settings_ntrip_save_btn_clicked,
         )
         
         # Container status update signals
@@ -112,8 +112,8 @@ class MainController(QObject):
         self._main_model.signal_on_settings_param_loaded.connect(
             self._main_view.on_signal_settings_param_loaded,
         )
-        self._main_model.ntrip_params_cfg_model.signal_ntrip_params_synced.connect(
-            self._main_view.on_signal_ntrip_params_synced,
+        self._main_model.ntrip_params_cfg_model.signal_settings_ntrip_synced.connect(
+            self._main_view.on_signal_settings_ntrip_synced,
         )
         
     @pyqtSlot()
@@ -282,7 +282,7 @@ class MainController(QObject):
         )
         
     @pyqtSlot()
-    def on_signal_ntrip_params_sync_btn_clicked(self):
+    def on_signal_settings_ntrip_sync_btn_clicked(self):
         """
         Slot method to handle the NTRIP parameters sync button click event.
         """
@@ -290,7 +290,7 @@ class MainController(QObject):
         self._main_model.ntrip_params_cfg_model.sync()
     
     @pyqtSlot(dict)
-    def on_signal_ntrip_params_save_btn_clicked(self, params: dict):
+    def on_signal_settings_ntrip_save_btn_clicked(self, params: dict):
         """
         Slot method to handle the NTRIP parameters save button click event.
         """

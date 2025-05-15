@@ -10,7 +10,7 @@ from typing import List, Tuple, Dict, Any
 
 from app.utils.logger import logger
 
-class SettingSliderItem(QWidget):
+class NavSettingSliderItem(QWidget):
     def __init__(
         self,
         label: str,
@@ -93,18 +93,18 @@ UI_CONSTANTS = {
 }
 
 
-class SettingsTabWidget(QWidget):
+class NavSettingsTabWidget(QWidget):
     def __init__(
         self,
         param_configs: List[Tuple[str, str, float, float, float]],
     ):
         super().__init__()
         
-        self.params_widgets: Dict[str, SettingSliderItem] = {}
+        self.params_widgets: Dict[str, NavSettingSliderItem] = {}
         
         # Create all sliders based on configuration
         for param_id, label, min_val, max_val, step in param_configs:
-            slider = SettingSliderItem(
+            slider = NavSettingSliderItem(
                 label,
                 min=min_val,
                 max=max_val,
@@ -126,7 +126,7 @@ class SettingsTabWidget(QWidget):
         self.setLayout(params_layout)
 
 
-class SettingsPanelView(QWidget):
+class NavSettingsPanelView(QWidget):
 
     signal_load_btn_clicked = pyqtSignal(str)  # str: file path
     signal_save_btn_clicked = pyqtSignal(str, dict)  # str: file path, dict: params
@@ -151,7 +151,7 @@ class SettingsPanelView(QWidget):
         )
         
         # Create regulated pure pursuit tab
-        self.regulated_pure_pursuit_tab = SettingsTabWidget(
+        self.regulated_pure_pursuit_tab = NavSettingsTabWidget(
             param_configs=[
                 ("lookahead_dist", "Lookahead Distance (m)", 0, 2.0, 0.1),
                 ("lookahead_time", "Lookahead Time (s)", 0, 3.0, 0.1),
@@ -165,7 +165,7 @@ class SettingsPanelView(QWidget):
             ]
         )
         
-        self.others_tab = SettingsTabWidget(
+        self.others_tab = NavSettingsTabWidget(
             param_configs=[
                 ("xy_goal_tolerance", "XY Goal Tolerance (m)", 0, 1.0, 0.01),
                 ("yaw_goal_tolerance", "Yaw Goal Tolerance (rad)", 0, 3.14, 0.01),
@@ -287,7 +287,7 @@ class SettingsPanelView(QWidget):
         # params_widgets["min_theta_velocity_threshold"].set_value(others_data['min_theta_velocity_threshold'])
         # params_widgets["min_x_velocity_threshold"].set_value(others_data['min_x_velocity_threshold'])
     
-    def get_params(self):
+    def get_nav_params(self):
         if self.full_params is None:
             logger.error("No parameters loaded. Cannot get params.")
             return None
