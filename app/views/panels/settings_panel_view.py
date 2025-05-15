@@ -4,12 +4,13 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtCore import Qt
 from typing import Dict, Any
 
-from app.views.panels.ntrip_settings_panel_view import NTRIPSettingsPanelView
-from app.views.panels.nav_settings_panel_view import NavSettingsPanelView
-
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QDialogButtonBox, QWidget
-
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QDialogButtonBox, QPushButton, QWidget
+
+from .other_settings_panel_view import OtherSettingsPanelView
+from .nav_settings_panel_view import NavSettingsPanelView
+from .ntrip_settings_panel_view import NTRIPSettingsPanelView
+
 
 class BaseSettingsDialog(QDialog):
     def __init__(self, title, content_widget: QWidget, fixed_size=(400, 300), parent=None):
@@ -56,33 +57,20 @@ class NavSettingsDialog(BaseSettingsDialog):
             "Navigation Settings", nav_panel, 
             fixed_size=(850, 500), parent=parent)
         self.nav_panel = nav_panel
-
-    def get_nav_params(self):
-        return self.nav_panel.get_nav_params()
-
+        
 class NtripSettingsDialog(BaseSettingsDialog):
     def __init__(self, config, parent=None):
         ntrip_panel = NTRIPSettingsPanelView(config)
         super().__init__(
             "NTRIP Settings", ntrip_panel, fixed_size=(400, 200), parent=parent)
         self.ntrip_panel = ntrip_panel
-
-    def get_ntrip_params(self):
-        return self.ntrip_panel.get_ntrip_params()
-
-class OtherSettingsDialog(QDialog):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.setWindowTitle("Other Settings")
-        layout = QVBoxLayout()
-        group = QGroupBox("Other Parameters")
-        group_layout = QVBoxLayout()
-        group_layout.addWidget(QLabel("Other Setting 1: ..."))
-        group_layout.addWidget(QLabel("Other Setting 2: ..."))
-        group.setLayout(group_layout)
-        layout.addWidget(group)
-        layout.addWidget(QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel))
-        self.setLayout(layout)
+        
+class OtherSettingsDialog(BaseSettingsDialog):
+    def __init__(self, config, parent=None):
+        other_panel = OtherSettingsPanelView(config)
+        super().__init__(
+            "Other Settings", other_panel, fixed_size=(400, 200), parent=parent)
+        self.other_panel = other_panel
 
 class SettingsPanelView(QWidget):
     def __init__(self, config: Dict[str, Any]):
@@ -94,7 +82,7 @@ class SettingsPanelView(QWidget):
         
         self.nav_settings_dlg = NavSettingsDialog(self._config, self)
         self.ntrip_settings_dlg = NtripSettingsDialog(self._config, self)
-        self.other_settings_dlg = OtherSettingsDialog(self)
+        self.other_settings_dlg = OtherSettingsDialog(self._config, self)
 
     def _init_buttons(self):
         self.nav_settings_btn = QPushButton("Navigation Settings")
