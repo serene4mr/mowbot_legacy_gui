@@ -1,6 +1,9 @@
 from PyQt5.QtCore import QObject
+from PyQt5.QtCore import pyqtSignal
 from pathlib import Path
 import yaml
+
+from app.utils.logger import logger
 
 class SettingsCfgModel(QObject):
     """
@@ -8,7 +11,7 @@ class SettingsCfgModel(QObject):
     """
 
     def __init__(self):
-        pass
+        super().__init__()
         
     def set_settings(self, settings: dict) -> None:
         """
@@ -24,6 +27,8 @@ class SettingsCfgModel(QObject):
 
 
 class OtherSettingsCfgModel(SettingsCfgModel):
+    
+    signal_settings_other_synced = pyqtSignal(dict)
     
     _instance = None
     
@@ -46,22 +51,32 @@ class OtherSettingsCfgModel(SettingsCfgModel):
         self.cfg_files = {
             "cmdvel_scaler_node": Path(self._config["mowbot_legacy_data_path"]) / self._config["cmdvel_scaler_params_file"],
         }
-        self.cfg_settings ={}
             
         
-    def get_settings(self) -> dict:
-        
+    def _get_settings(self) -> dict:
+        cfg_settings = {}
         # read the yaml files
         for key, file in self.cfg_files.items():
             if not file.exists():
                 raise FileNotFoundError(f"File {file} does not exist.")
             
             with open(file, 'r') as f:
-                self.cfg_settings[key] = yaml.safe_load(f)["/**"][key]["ros__parameters"]
+                temp = yaml.safe_load(f)["/**"][key]["ros__parameters"]
+                for k, v in temp.items():
+                    cfg_settings[key + "." + k] = v
                 
-        return self.cfg_settings
+        return cfg_settings
                 
     
-    def set_settings(self, settings: dict) -> None:
+    def _set_settings(self, settings: dict) -> None:
         pass
+    
+    def sync(self) -> None:
+        """
+        Sync the settings.
+        """
+        self.cfg_settings = self._get_settings()
+        self.signal_settings_other_synced.emit(self.cfg_settings)
+        
+        
         

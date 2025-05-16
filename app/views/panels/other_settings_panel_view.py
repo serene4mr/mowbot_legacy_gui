@@ -169,8 +169,8 @@ class OtherSettingsPanelView(QWidget):
         )
         
         self.control_tab = SettingsTabWidget({
-            "left_rate": SettingSliderItem("Left Motor Rate", 0, 1.0, 0.01, 200),
-            "right_rate": SettingSliderItem("Right Motor Rate", 0, 1.0, 0.01, 200),
+            "cmdvel_scaler_node.left_rate": SettingSliderItem("Left Motor Rate", 0, 1.0, 0.01, 200),
+            "cmdvel_scaler_node.right_rate": SettingSliderItem("Right Motor Rate", 0, 1.0, 0.01, 200),
         })
         
         self.settings_tab.addTab(self.control_tab, "Control")

@@ -674,3 +674,11 @@ class MainView(QWidget):
         ntrip_settings.set_ntrip_params(
             params=params,
         )
+        
+    @pyqtSlot(dict)
+    def on_signal_settings_other_synced(self, params: dict):
+        logger.info(f"Other params synced: {params}")
+        other_settings = self.multi_panel.settings_panel.other_settings_dlg.other_panel
+        other_settings.set_settings(
+            settings=params,
+        )

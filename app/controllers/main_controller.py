@@ -120,6 +120,10 @@ class MainController(QObject):
             self._main_view.on_signal_settings_ntrip_synced,
         )
         
+        self._main_model.other_settings_cfg_model.signal_settings_other_synced.connect(
+            self._main_view.on_signal_settings_other_synced,
+        )
+        
     @pyqtSlot()
     def on_app_exit(self):
         """
@@ -309,8 +313,8 @@ class MainController(QObject):
         """
         Slot method to handle the NTRIP parameters sync button click event.
         """
-        logger.info("NTRIP parameters sync button clicked.")
-        # self._main_model.
+        logger.info("Other settings sync button clicked.")
+        self._main_model.other_settings_cfg_model.sync()
         
         
                 
