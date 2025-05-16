@@ -8,6 +8,9 @@ from PyQt5.QtCore import (
 from .foxglove_ws_model import FoxgloveWsModel
 from .ros2_launch_container_model import ROS2LaunchContainerModel
 from .ntrip_params_cfg_model import NTRIPParamsCfgModel
+from .settings_cfg_model import (
+    OtherSettingsCfgModel
+)
 
 from app.utils.logger import logger
 
@@ -36,6 +39,10 @@ class MainModel(QObject):
         # self._ros2_launch_container_model.create_all_launch_containers()
         
         self.ntrip_params_cfg_model = NTRIPParamsCfgModel.get_instance(
+            config=self._config,
+        )
+        
+        self.other_settings_cfg_model = OtherSettingsCfgModel.get_instance(
             config=self._config,
         )
         

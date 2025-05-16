@@ -16,7 +16,9 @@ class BaseSettingsDialog(QDialog):
     def __init__(self, title, content_widget: QWidget, fixed_size=(400, 300), parent=None):
         super().__init__(parent)
         self.setWindowTitle(title)
-        self.setFixedSize(*fixed_size)
+        # if fixed_size = -1, -1, it will be resizable
+        self.setFixedWidth(fixed_size[0]) if fixed_size[0] != -1 else None
+        self.setFixedHeight(fixed_size[1]) if fixed_size[1] != -1 else None
 
         # Remove all system buttons, keep only the title bar
         # self.setWindowFlags(Qt.Window | Qt.CustomizeWindowHint | Qt.WindowTitleHint)
@@ -62,14 +64,14 @@ class NtripSettingsDialog(BaseSettingsDialog):
     def __init__(self, config, parent=None):
         ntrip_panel = NTRIPSettingsPanelView(config)
         super().__init__(
-            "NTRIP Settings", ntrip_panel, fixed_size=(400, 200), parent=parent)
+            "NTRIP Settings", ntrip_panel, fixed_size=(400, 250), parent=parent)
         self.ntrip_panel = ntrip_panel
         
 class OtherSettingsDialog(BaseSettingsDialog):
     def __init__(self, config, parent=None):
         other_panel = OtherSettingsPanelView(config)
         super().__init__(
-            "Other Settings", other_panel, fixed_size=(400, 200), parent=parent)
+            "Other Settings", other_panel, fixed_size=(650, -1), parent=parent)
         self.other_panel = other_panel
 
 class SettingsPanelView(QWidget):

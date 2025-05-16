@@ -52,6 +52,9 @@ class MainView(QWidget):
     signal_settings_ntrip_save_btn_clicked = pyqtSignal(dict)  # dict: ntrip params
     signal_settings_ntrip_sync_btn_clicked = pyqtSignal()
     
+    signal_settings_other_apply_btn_clicked = pyqtSignal(dict)  # dict: other params
+    signal_settings_other_sync_btn_clicked = pyqtSignal()
+    
     
     def __init__(self, config):
         super().__init__()
@@ -259,6 +262,12 @@ class MainView(QWidget):
             self.on_signal_settings_ntrip_sync_btn_clicked)
         self.multi_panel.settings_panel.ntrip_settings_dlg.ntrip_panel.save_btn.clicked.connect(
             self.on_signal_settings_ntrip_save_btn_clicked)
+        
+        # other settings
+        self.multi_panel.settings_panel.other_settings_dlg.other_panel.sync_btn.clicked.connect(
+            self.on_signal_settings_other_sync_btn_clicked)
+        self.multi_panel.settings_panel.other_settings_dlg.other_panel.apply_btn.clicked.connect(
+            self.on_signal_settings_other_apply_btn_clicked)
         
         
     def on_exit_btn_clicked(self):
@@ -471,6 +480,19 @@ class MainView(QWidget):
     def on_signal_settings_ntrip_sync_btn_clicked(self):
         """Forward the NTRIP params sync button event."""
         self.signal_settings_ntrip_sync_btn_clicked.emit()
+        
+    def on_signal_settings_other_sync_btn_clicked(self):
+        """Forward the other settings sync button event."""
+        self.signal_settings_other_sync_btn_clicked.emit()
+        
+    def on_signal_settings_other_apply_btn_clicked(self):
+        """Forward the other settings apply button event."""
+        other_settings = self.multi_panel.settings_panel.other_settings_dlg.other_panel
+        other_params = other_settings.get_settings()
+        if not other_params:
+            logger.warning("No other params to apply.")
+            return
+        self.signal_settings_other_apply_btn_clicked.emit(other_params)
         
     @pyqtSlot(str)
     def on_signal_bringup_container_status(self, status: str):

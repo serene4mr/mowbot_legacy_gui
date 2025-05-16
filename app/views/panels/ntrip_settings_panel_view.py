@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import (
     QLineEdit,
     QPushButton,
     QMessageBox,
+    QGroupBox,
 )
 
 class LineEditSettingsItem(QWidget):
@@ -77,8 +78,13 @@ class NTRIPSettingsPanelView(QWidget):
 
     def _init_ui(self):
         layout = QVBoxLayout()
-        layout.addWidget(self.ntrip_username_le)
-        layout.addWidget(self.ntrip_password_le)
+        ntrip_user_gb = QGroupBox("NTRIP Account")
+        ntrip_user_gb_layout = QVBoxLayout()
+        ntrip_user_gb_layout.addWidget(self.ntrip_username_le)
+        ntrip_user_gb_layout.addWidget(self.ntrip_password_le)
+        ntrip_user_gb_layout.addStretch(1)
+        ntrip_user_gb.setLayout(ntrip_user_gb_layout)
+        layout.addWidget(ntrip_user_gb)
         layout.addSpacing(10)
         btn_layout = QHBoxLayout()
         btn_layout.addWidget(self.sync_btn)
