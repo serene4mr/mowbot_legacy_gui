@@ -89,6 +89,9 @@ class MainController(QObject):
         self._main_view.signal_settings_other_sync_btn_clicked.connect(
             self.on_signal_settings_other_sync_btn_clicked,
         )
+        self._main_view.signal_settings_other_apply_btn_clicked.connect(
+            self.on_signal_settings_other_apply_btn_clicked,
+        )
         
         # Container status update signals
         self._main_model.ros2_launch_container_model.signal_container_status_updated.connect(
@@ -311,10 +314,20 @@ class MainController(QObject):
     @pyqtSlot()
     def on_signal_settings_other_sync_btn_clicked(self):
         """
-        Slot method to handle the NTRIP parameters sync button click event.
+        Slot method to handle the other settings sync button click event.
         """
         logger.info("Other settings sync button clicked.")
         self._main_model.other_settings_cfg_model.sync()
+        
+    @pyqtSlot(dict)
+    def on_signal_settings_other_apply_btn_clicked(self, params: dict):
+        """
+        Slot method to handle the other settings apply button click event.
+        """
+        logger.info("Other settings apply button clicked.")
+        self._main_model.other_settings_cfg_model.apply(
+            settings=params,
+        )
         
         
                 

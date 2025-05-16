@@ -124,6 +124,7 @@ class SettingsTabWidget(QWidget):
         """Get the current settings from all items."""
         settings = {}
         for name, item in self.setting_items.items():
+            print(f"Getting value for {name}: {item.get_value()}")
             settings[name] = item.get_value()
         return settings
     

@@ -55,7 +55,7 @@ class OtherSettingsCfgModel(SettingsCfgModel):
         
     def _get_settings(self) -> dict:
         cfg_settings = {}
-        # read the yaml files
+        
         for key, file in self.cfg_files.items():
             if not file.exists():
                 raise FileNotFoundError(f"File {file} does not exist.")
@@ -69,7 +69,21 @@ class OtherSettingsCfgModel(SettingsCfgModel):
                 
     
     def _set_settings(self, settings: dict) -> None:
-        pass
+        for key, value in settings.items():
+            k1 , k2 = key.split(".")
+            if k1 in self.cfg_files:
+                with open(self.cfg_files[k1], 'r') as f:
+                    temp = yaml.safe_load(f)
+                
+                if k2 in temp["/**"][k1]["ros__parameters"]:
+                    temp["/**"][k1]["ros__parameters"][k2] = value
+                else:
+                    raise KeyError(f"Key {k2} not found in {k1} parameters.")
+                
+                with open(self.cfg_files[k1], 'w') as f:
+                    yaml.dump(temp, f)
+                
+        logger.info(f"Settings saved: {settings}")
     
     def sync(self) -> None:
         """
@@ -77,6 +91,12 @@ class OtherSettingsCfgModel(SettingsCfgModel):
         """
         self.cfg_settings = self._get_settings()
         self.signal_settings_other_synced.emit(self.cfg_settings)
+        
+    def apply(self, settings: dict) -> None:
+        """
+        Apply the settings.
+        """
+        self._set_settings(settings)
         
         
         
