@@ -3,7 +3,6 @@ import yaml
 from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
 from typing import Dict, Any
 
-
 from app.utils.logger import logger
 
 class NTRIPParamsCfgModel(QObject):

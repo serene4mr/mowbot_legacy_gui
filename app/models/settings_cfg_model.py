@@ -26,6 +26,11 @@ class SettingsCfgModel(QObject):
         raise NotImplementedError("Subclasses should implement this method.")
 
 
+# class NtripSettingsCfgModel(SettingsCfgModel):
+    """
+    """
+
+
 class OtherSettingsCfgModel(SettingsCfgModel):
     
     signal_settings_other_synced = pyqtSignal(dict)
@@ -50,6 +55,7 @@ class OtherSettingsCfgModel(SettingsCfgModel):
         self._config = config
         self.cfg_files = {
             "cmdvel_scaler_node": Path(self._config["mowbot_legacy_data_path"]) / self._config["cmdvel_scaler_params_file"],
+            "kt_server_client_node": Path(self._config["mowbot_legacy_data_path"]) / self._config["kt_server_bridge_params_file"],
         }
             
         

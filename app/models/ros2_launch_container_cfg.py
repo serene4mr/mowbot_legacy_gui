@@ -23,6 +23,7 @@ CONTAINERS_CFG = {
                 laser:=true \
                 sensormon:=true \
                 rl:=false \
+                ktserver:=true \
             "
         ],
         "network_mode": "host",

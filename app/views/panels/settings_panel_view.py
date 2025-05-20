@@ -7,9 +7,11 @@ from typing import Dict, Any
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QDialogButtonBox, QWidget
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QDialogButtonBox, QPushButton, QWidget
 
-from .other_settings_panel_view import OtherSettingsPanelView
-from .nav_settings_panel_view import NavSettingsPanelView
-from .ntrip_settings_panel_view import NTRIPSettingsPanelView
+from .settings_pannels import (
+    NavSettingsPanelView,
+    NTRIPSettingsPanelView,
+    OtherSettingsPanelView,
+)
 
 
 class BaseSettingsDialog(QDialog):
