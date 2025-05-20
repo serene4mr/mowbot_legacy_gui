@@ -26,9 +26,70 @@ class SettingsCfgModel(QObject):
         raise NotImplementedError("Subclasses should implement this method.")
 
 
-# class NtripSettingsCfgModel(SettingsCfgModel):
-    """
-    """
+class NtripSettingsCfgModel(SettingsCfgModel):
+
+    signal_settings_ntrip_synced = pyqtSignal(dict)
+    
+    _instance = None
+
+    @staticmethod
+    def get_instance(config) -> "NtripSettingsCfgModel":
+        """
+        Returns the singleton instance of NTRIPParamsCfgModel.
+        """
+        if NtripSettingsCfgModel._instance is None:
+            NtripSettingsCfgModel._instance = NtripSettingsCfgModel(config)
+        return NtripSettingsCfgModel._instance
+    
+    def __init__(
+        self,
+        config,
+    ):
+        super().__init__()
+        self._config = config
+        self._ntrip_params_file = \
+            Path(self._config["mowbot_legacy_data_path"]) / self._config["ntrip_params_file"]
+            
+    
+    def get_settings(self):
+        """
+        Get the settings.
+        """
+        if not self._ntrip_params_file.exists():
+            logger.error(f"NTRIP params file not found: {self._ntrip_params_file}")
+            return {}
+        
+        with open(self._ntrip_params_file, 'r') as file:
+            ntrip_params = yaml.safe_load(file)["/**"]["ntrip_client"]["ros__parameters"]
+        
+        return ntrip_params
+    
+    def set_settings(self, settings: dict) -> None:
+        """
+        Set the settings.
+        """
+        if not self._ntrip_params_file.exists():
+            logger.error(f"NTRIP params file not found: {self._ntrip_params_file}")
+            return
+        
+        with open(self._ntrip_params_file, 'w') as file:
+            yaml.dump({"/**": {"ntrip_client": {"ros__parameters": settings}}}, file)
+        
+        logger.info(f"NTRIP params saved: {settings}")
+    
+    def apply(self, settings: dict) -> None:
+        """
+        Apply the settings.
+        """
+        self.set_settings(settings)
+        
+    def sync(self) -> None:
+        """
+        Sync the settings.
+        """
+        settings = self.get_settings()
+        self.signal_settings_ntrip_synced.emit(settings)
+        
 
 
 class OtherSettingsCfgModel(SettingsCfgModel):
@@ -59,7 +120,7 @@ class OtherSettingsCfgModel(SettingsCfgModel):
         }
             
         
-    def _get_settings(self) -> dict:
+    def get_settings(self) -> dict:
         cfg_settings = {}
         
         for key, file in self.cfg_files.items():
@@ -74,7 +135,7 @@ class OtherSettingsCfgModel(SettingsCfgModel):
         return cfg_settings
                 
     
-    def _set_settings(self, settings: dict) -> None:
+    def set_settings(self, settings: dict) -> None:
         for key, value in settings.items():
             k1 , k2 = key.split(".")
             if k1 in self.cfg_files:
@@ -95,14 +156,14 @@ class OtherSettingsCfgModel(SettingsCfgModel):
         """
         Sync the settings.
         """
-        self.cfg_settings = self._get_settings()
-        self.signal_settings_other_synced.emit(self.cfg_settings)
+        cfg_settings = self.get_settings()
+        self.signal_settings_other_synced.emit(cfg_settings)
         
     def apply(self, settings: dict) -> None:
         """
         Apply the settings.
         """
-        self._set_settings(settings)
+        self.set_settings(settings)
         
         
         
