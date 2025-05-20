@@ -7,7 +7,6 @@ from PyQt5.QtCore import (
 )
 from .foxglove_ws_model import FoxgloveWsModel
 from .ros2_launch_container_model import ROS2LaunchContainerModel
-from .ntrip_params_cfg_model import NTRIPParamsCfgModel
 from .settings_cfg_model import (
     OtherSettingsCfgModel,
     NtripSettingsCfgModel,
