@@ -64,9 +64,12 @@ class MapView(QWidget):
             logger.error("Failed to load map template: " + str(e))
             html = ""
         
-        # Replace the placeholder with the actual Bing API key.
-        bing_api_key = self._config["bing_api_key"]
-        html = html.replace("{bingApiKey}", bing_api_key)
+        # # Replace the placeholder with the actual Bing API key.
+        # bing_api_key = self._config["bing_api_key"]
+        # html = html.replace("{bingApiKey}", bing_api_key)
+        # Replace the placeholder with the actual Google Maps API key.
+        google_maps_api_key = self._config.get("google_maps_api_key", "")
+        html = html.replace("{google_maps_api_key}", google_maps_api_key)
         
         self.web_view.setHtml(html)
         

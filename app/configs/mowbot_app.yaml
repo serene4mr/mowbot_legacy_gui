@@ -5,8 +5,9 @@
 foxglove_ws_uri: ws://localhost:8765
 foxglove_ws_subprotocol: foxglove.websocket.v1
 
-# bing api key
+# map api key
 bing_api_key: "AkCDUXwYzM3w36XYcNeT0kNOFhpTiQuwluXkQlFBs1WhFbknP2_2iDBXeL_WzXCc"
+google_maps_api_key: "AIzaSyB6wDcBKTq5ORK6TEOD-dDxdTPWkZs6ZlI"
 
 # container
 container_image: "ghcr.io/serene4mr/mowbot_legacy:latest"
