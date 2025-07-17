@@ -17,6 +17,23 @@
         var googleMapsApiKey = '{google_maps_api_key}'; // Replace with your Google Maps API key
         // Initialize the map
         var map = L.map('map').setView([37.7749, -122.4194], 19);
+            
+        //var esriLayer = L.tileLayer(
+        //    'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+        //    { attribution: 'Tiles © Esri' }
+        //);
+        //    
+        //var osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        //    attribution: '&copy; OpenStreetMap contributors'
+        //});
+        //
+        //esriLayer.addTo(map);
+        //
+        //var baseMaps = {
+        //    "ESRI Satellite": esriLayer,
+        //    "OpenStreetMap": osmLayer
+        //};
+        //L.control.layers(baseMaps).addTo(map);
 
         // Google Maps Satellite Layer
         var googleLayer = L.tileLayer(`https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}&key=${googleMapsApiKey}`, {
